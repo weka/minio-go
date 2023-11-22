@@ -412,7 +412,6 @@ func removeStatements(statements []Statement, bucketName string, prefix string) 
 			statement.Conditions == nil {
 			continue
 		}
-
 		out = append(out, statement)
 	}
 
@@ -430,10 +429,10 @@ func removeStatements(statements []Statement, bucketName string, prefix string) 
 	return out
 }
 
-//  Appends given statement into statement list to have unique statements.
-//  - If statement already exists in statement list, it ignores.
-//  - If statement exists with different conditions, they are merged.
-//  - Else the statement is appended to statement list.
+// Appends given statement into statement list to have unique statements.
+// - If statement already exists in statement list, it ignores.
+// - If statement exists with different conditions, they are merged.
+// - Else the statement is appended to statement list.
 func appendStatement(statements []Statement, statement Statement) []Statement {
 	for i, s := range statements {
 		if s.Actions.Equals(statement.Actions) &&
@@ -623,6 +622,11 @@ func GetPolicies(statements []Statement, bucketName, prefix string) map[string]B
 		policyRules[bucketName+"/"+objectPath+asterisk] = p
 	}
 	return policyRules
+}
+
+func CheckStatementsAreRemovable(statements []Statement, bucketName string, prefix string) bool {
+	out := removeStatements(statements, bucketName, prefix)
+	return len(out) == 0
 }
 
 // SetPolicy - Returns new statements containing policy of given bucket name and prefix are appended.
